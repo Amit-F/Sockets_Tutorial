@@ -13,14 +13,13 @@ const db = await open({
 });
 
 // create the 'messages' table
-await db.exec('
+await db.exec(`
     CREATE TABLE IF NOT EXISTS messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     client_offset TEXT UNIQUE,
     content TEXT
     );
-');
-
+`);
 
 const app = express();
 const server = createServer(app);
