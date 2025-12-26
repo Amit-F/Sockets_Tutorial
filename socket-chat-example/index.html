@@ -25,11 +25,16 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      let counter = 0;
+
       // const socket = io();
       const socket = io({
         auth: {
           serverOffset: 0
-        }
+        },
+        // enable retries
+        ackTimeout: 10000,
+        retries: 3,
       });
 
       const toggleButton = document.getElementById('toggle-btn');
@@ -52,7 +57,10 @@
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         if (input.value) {
-          socket.emit('chat message', input.value);
+          // compute a unique offset (socket.id attricbute is a random 20-char identifier assigned to each connection)
+          const clientOffset = `${socket.id}-${counter++}`;
+          socket.emit('chat message', input.value, clientOffset);
+          // socket.emit('chat message', input.value);
           input.value = '';
         }
       });
